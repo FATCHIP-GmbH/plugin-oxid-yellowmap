@@ -2,7 +2,7 @@
     [{assign var="oConfig" value=$oViewConf->getConfig()}]
 [{/if}]
 
-<script src="https://www.yellowmap.de/api_rst/api/loader?libraries=free-5,autocomplete-5&apiKey=[{$oConfig->getConfigParam('sFcYellowmapAcApiKey')}]"></script>
+<script src="https://www.yellowmap.de/api_rst/api/loader?libraries=free-5,autocomplete-5&apiKey=[{$oConfig->getConfigParam('sFcYellowmapAcApiKey')}]&channel=OXIDAV"></script>
 
 <script>
     ym.ready({ autocomplete: 5 }, function (modules) {
