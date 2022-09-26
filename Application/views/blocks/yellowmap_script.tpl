@@ -1,9 +1,26 @@
 [{if !isset($oConfig)}]
     [{assign var="oConfig" value=$oViewConf->getConfig()}]
 [{/if}]
+[{assign var="aHomeCountry" value=$oConfig->getConfigParam('aHomeCountry')}]
+[{assign var="aCountryList" value=$oViewConf->getCountryList()}]
 
 <script src="https://www.yellowmap.de/api_rst/api/loader?libraries=free-5,autocomplete-5&apiKey=[{$oConfig->getConfigParam('sFcYellowmapAcApiKey')}]&channel=OXIDAV"></script>
-
+<style>
+    @supports (--css: variables) {
+        :root {
+            --smartmaps-text-color: #555;
+            --smartmaps-input-bg-color: #ffffff;
+            --smartmaps-border: solid 1px #ccc;
+            --smartmaps-border-radius: 4px;
+            --smartmaps-boxshadow: none;
+            --smartmaps-font-size: 14px;
+        }
+    }
+    .sm-autocomplete {
+        display: block;
+        border-radius: 4px;
+    }
+</style>
 <script>
     ym.ready({ autocomplete: 5 }, function (modules) {
         var oFcFieldMappingInv = {
@@ -13,16 +30,8 @@
             city: 'invadr[oxuser__oxcity]',
             state: 'invadr[oxuser__oxstateid]',
             country: 'invadr[oxuser__oxcountryid]'
-        }
-        var oFcAutoCompleteInv = modules.autoComplete('input[name="' + oFcFieldMappingInv.street + '"]', {
-            isoCountries: [],
-            includeFilters: {
-            },
-            dataType: 'json'
-        });
-        oFcAutoCompleteInv.on('selected', function (geojson, address, query) {
-            fcFillAddress(address, oFcFieldMappingInv)
-        })
+        };
+        fcInitAutocompleteField(modules, 'input[name="' + oFcFieldMappingInv.street + '"]', oFcFieldMappingInv);
 
         var oFcFieldMappingDel = {
             street: 'deladr[oxaddress__oxstreet]',
@@ -32,20 +41,65 @@
             state: 'deladr[oxaddress__oxstateid]',
             country: 'deladr[oxaddress__oxcountryid]'
         }
-        var oFcAutoCompleteDel = modules.autoComplete('input[name="' + oFcFieldMappingDel.street + '"]', {
-            isoCountries: [],
+        fcInitAutocompleteField(modules, 'input[name="' + oFcFieldMappingDel.street + '"]', oFcFieldMappingDel);
+    });
+
+    function fcInitAutocompleteField(modules, sTargetSelector, oFieldMapping) {
+        var oAutoCompleteField = modules.autoComplete(sTargetSelector, {
+            className: "form-group",
+            isoCountries: fcFetchIsoCountries(oFieldMapping),
             includeFilters: {
             },
             dataType: 'json'
         });
-        oFcAutoCompleteDel.on('selected', function (geojson, address, query) {
-            fcFillAddress(address, oFcFieldMappingDel)
+        oAutoCompleteField.on('selected', function (geojson, address, query) {
+            fcFillAddress(address, oFieldMapping);
         });
-    });
+        var oCountrySelector = document.getElementsByName(oFieldMapping.country);
+        if (oCountrySelector.length > 0) {
+            oCountrySelector = oCountrySelector[0];
+            oCountrySelector.onchange = function() {
+                oAutoCompleteField.options.isoCountries = fcFetchIsoCountries(oFieldMapping);
+            }
+        }
+    }
+
+    function fcFetchIsoCountries(oFieldMapping) {
+        var sSelectedCountryId = '';
+        var oCountrySelector = document.getElementsByName(oFieldMapping.country);
+        if (oCountrySelector.length > 0) {
+            oCountrySelector = oCountrySelector[0];
+            sSelectedCountryId = oCountrySelector.value;
+        }
+
+        var aIsoCountries = [];
+        if (sSelectedCountryId != '') {
+            var oCountryCodes = {
+                [{foreach from=$aCountryList item=oCountry key=sCountryId}]
+                "[{$sCountryId}]":"[{$oCountry->oxcountry__oxisoalpha2->value}]",
+                [{/foreach}]
+            };
+
+            if ("undefined" != typeof oCountryCodes[sSelectedCountryId]) {
+                var sSelectedCountryCode = oCountryCodes[sSelectedCountryId];
+                if (sSelectedCountryCode != '') {
+                    aIsoCountries.push(sSelectedCountryCode.toLowerCase());
+                }
+            }
+        } else {
+            [{foreach from=$aCountryList item=oCountry key=sCountryId}]
+            [{if $sCountryId|in_array:$aHomeCountry}]
+            aIsoCountries.push("[{$oCountry->oxcountry__oxisoalpha2->value|lower}]");
+            [{/if}]
+            [{/foreach}]
+        }
+
+        return aIsoCountries;
+    }
 
     function fcFillAddress (oAddress, oFieldMapping) {
         var oCountries = {
-            [{foreach from=$oViewConf->getCountryList() item=oCountry key=sCountryId}]
+            [{foreach from=$aCountryList item=oCountry key=sCountryId}]
             "[{$oCountry->oxcountry__oxisoalpha2->value}]":"[{$sCountryId}]",
             [{/foreach}]
         };
