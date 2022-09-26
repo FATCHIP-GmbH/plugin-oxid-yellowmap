@@ -16,7 +16,7 @@ $aModule = [
         'de' => 'Integration von SmartMaps Autovervollständigung',
         'en' => 'Integration of SmartMaps Autocomplete',
     ],
-    'version' => '1.0.0',
+    'version' => '1.0.1',
     'author' => 'FATCHIP GmbH',
     'email' => 'support@fatchip.de',
     'url' => '',
