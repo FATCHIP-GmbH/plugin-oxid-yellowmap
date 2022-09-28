@@ -54,6 +54,17 @@ Through the module settings you can setup the Smartmaps API Key, mandatory to us
 
 See https://www.smartmaps.net/
 
+## Usage
+
+- When landing on a form asking for an address (regitration, guest checkout, user profile addresses), the yellowmap module will enhance the **street** field.
+- In this field, you will be able to type in the address hints (street, zip code, house number ...) and the module will suggest existing results based on the entry.
+
+### Note about country restriction
+- By default, the suggestions will be restricted to configured country(ies) in "Master Settings > Settings > Global".
+- If the form's country field is set (selecting a country, or after a first autocompletion), the search is now restricted to this country alone.
+  - If no country is selected (dropdown set back to "-"), the default behaviour applies.
+
+
 ## Author
 FATCHIP GmbH | https://www.fatchip.de | support@fatchip.de
 
