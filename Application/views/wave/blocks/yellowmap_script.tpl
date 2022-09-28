@@ -22,6 +22,10 @@
         display: block;
         border-radius: 4px;
     }
+    .sm-autocomplete [type=text] {
+        height: calc(1.5em + .75rem + 2px);
+        line-height: 1.5;
+    }
 </style>
 <script>
     ym.ready({ autocomplete: 5 }, function (modules) {
