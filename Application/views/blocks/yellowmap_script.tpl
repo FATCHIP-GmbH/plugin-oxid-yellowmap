@@ -112,52 +112,29 @@
             [{/foreach}]
         };
 
-        // Street
-        var oAddrElem = document.getElementsByName(oFieldMapping.street);
-        if (oAddrElem.length > 0) {
-            oAddrElem[0].value = oAddress.street ? oAddress.street : "" ;
-        }
-
-        // Street nr
-        oAddrElem = document.getElementsByName(oFieldMapping.houseno);
-        if (oAddrElem.length > 0) {
-            oAddrElem[0].value = oAddress.houseNo ? oAddress.houseNo : "" ;
-        }
-
-        // Zip
-        oAddrElem = document.getElementsByName(oFieldMapping.zip);
-        if (oAddrElem.length > 0) {
-            oAddrElem[0].value = oAddress.zip ? oAddress.zip : "" ;
-        }
-
-        // City
-        oAddrElem = document.getElementsByName(oFieldMapping.city);
-        if (oAddrElem.length > 0) {
-            oAddrElem[0].value = oAddress.city ? oAddress.city : "" ;
-        }
-
-        // Country
         if ("undefined" != typeof oCountries[oAddress.country]) {
-            oAddrElem = document.getElementsByName(oFieldMapping.country);
-            if (oAddrElem.length > 0) {
-                oAddrElem = oAddrElem[0];
-                for (var i = 0; i < oAddrElem.options.length; i++) {
-                    if (oAddrElem.options[i].value == oCountries[oAddress.country]) {
-                        oAddrElem.options[i].select = true;
-                        oAddrElem.selectedIndex = i;
-                        oAddrElem.dispatchEvent(new Event('change'));
-                        break;
-                    }
-                }
-            }
+            fcSelectField(oFieldMapping.country, oCountries[oAddress.country]);     // Country
         }
+        fcUpdateField(oFieldMapping.street, oAddress.street);       // Street
+        fcUpdateField(oFieldMapping.houseno, oAddress.houseNo);     // Street nr
+        fcUpdateField(oFieldMapping.zip, oAddress.zip);             // Zip
+        fcUpdateField(oFieldMapping.city, oAddress.city);           // City
+        fcSelectField(oFieldMapping.state, oAddress.state);         // State
+    }
 
-        // State
-        oAddrElem = document.getElementsByName(oFieldMapping.state);
+    function fcUpdateField(sFieldName, sValue) {
+        var oAddrElem = document.getElementsByName(sFieldName);
+        if (oAddrElem.length > 0) {
+            oAddrElem[0].value = sValue ? sValue : "" ;
+        }
+    }
+
+    function fcSelectField(sFieldName, sSelectedValue) {
+        var oAddrElem = document.getElementsByName(sFieldName);
         if (oAddrElem.length > 0) {
             oAddrElem = oAddrElem[0];
             for (var i = 0; i < oAddrElem.options.length; i++) {
-                if (oAddrElem.options[i].value == oAddress.state) {
+                if (oAddrElem.options[i].value == sSelectedValue) {
                     oAddrElem.options[i].select = true;
                     oAddrElem.selectedIndex = i;
                     oAddrElem.dispatchEvent(new Event('change'));
