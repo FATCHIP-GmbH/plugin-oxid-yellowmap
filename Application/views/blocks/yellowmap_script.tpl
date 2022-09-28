@@ -4,6 +4,8 @@
 [{assign var="aHomeCountry" value=$oConfig->getConfigParam('aHomeCountry')}]
 [{assign var="aCountryList" value=$oViewConf->getCountryList()}]
 
+[{$smarty.block.parent}]
+
 <script src="https://www.yellowmap.de/api_rst/api/loader?libraries=free-5,autocomplete-5&apiKey=[{$oConfig->getConfigParam('sFcYellowmapAcApiKey')}]&channel=OXIDAV"></script>
 <style>
     @supports (--css: variables) {
@@ -31,7 +33,10 @@
             state: 'invadr[oxuser__oxstateid]',
             country: 'invadr[oxuser__oxcountryid]'
         };
-        fcInitAutocompleteField(modules, 'input[name="' + oFcFieldMappingInv.street + '"]', oFcFieldMappingInv);
+        var oFcTargetElem = document.getElementsByName(oFcFieldMappingInv.street);
+        if (oFcTargetElem.length > 0) {
+            fcInitAutocompleteField(modules, 'input[name="' + oFcFieldMappingInv.street + '"]', oFcFieldMappingInv);
+        }
 
         var oFcFieldMappingDel = {
             street: 'deladr[oxaddress__oxstreet]',
@@ -41,7 +46,10 @@
             state: 'deladr[oxaddress__oxstateid]',
             country: 'deladr[oxaddress__oxcountryid]'
         }
-        fcInitAutocompleteField(modules, 'input[name="' + oFcFieldMappingDel.street + '"]', oFcFieldMappingDel);
+        oFcTargetElem = document.getElementsByName(oFcFieldMappingDel.street);
+        if (oFcTargetElem.length > 0) {
+            fcInitAutocompleteField(modules, 'input[name="' + oFcFieldMappingDel.street + '"]', oFcFieldMappingDel);
+        }
     });
 
     function fcInitAutocompleteField(modules, sTargetSelector, oFieldMapping) {
@@ -159,5 +167,3 @@
         }
     }
 </script>
-
-[{$smarty.block.parent}]

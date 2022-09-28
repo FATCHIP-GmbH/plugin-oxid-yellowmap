@@ -20,7 +20,7 @@ $aModule = [
     'author' => 'FATCHIP GmbH',
     'email' => 'support@fatchip.de',
     'url' => '',
-    'thumbnail' => 'FC-Logo_24.png',
+    'thumbnail' => 'SmartMaps_poweredbyYM.svg',
     'extend' => [],
     'controllers' => [],
     'templates' => [],
@@ -36,6 +36,21 @@ $aModule = [
         [
             'template' => 'form/user_checkout_noregistration.tpl',
             'block'    => 'user_checkout_noregistration_next_step_top',
+            'file'     => 'Application/views/blocks/yellowmap_script.tpl',
+        ],
+        [
+            'template' => 'form/user_checkout_change.tpl',
+            'block'    => 'user_checkout_change_next_step_top',
+            'file'     => 'Application/views/blocks/yellowmap_script.tpl',
+        ],
+        [
+            'template' => 'form/user.tpl',
+            'block'    => 'user_form',
+            'file'     => 'Application/views/blocks/yellowmap_script.tpl',
+        ],
+        [
+            'template' => 'form/fieldset/user_account.tpl',
+            'block'    => 'user_account_newsletter',
             'file'     => 'Application/views/blocks/yellowmap_script.tpl',
         ],
     ],
