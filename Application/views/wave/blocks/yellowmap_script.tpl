@@ -58,7 +58,6 @@
 
     function fcInitAutocompleteField(modules, sTargetSelector, oFieldMapping) {
         var oAutoCompleteField = modules.autoComplete(sTargetSelector, {
-            className: "form-group",
             isoCountries: fcFetchIsoCountries(oFieldMapping),
             includeFilters: {
             },
@@ -66,6 +65,12 @@
         });
         oAutoCompleteField.on('selected', function (geojson, address, query) {
             fcFillAddress(address, oFieldMapping);
+        });
+        oAutoCompleteField.on("ready", function () {
+            var isFirefox = typeof InstallTrigger !== "undefined";
+            if (!isFirefox) {
+                this.element.autocomplete = "disabled";
+            }
         });
         var oCountrySelector = document.getElementsByName(oFieldMapping.country);
         if (oCountrySelector.length > 0) {
