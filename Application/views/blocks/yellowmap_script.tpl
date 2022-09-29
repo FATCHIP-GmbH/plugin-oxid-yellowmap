@@ -3,6 +3,7 @@
 [{/if}]
 [{assign var="aHomeCountry" value=$oConfig->getConfigParam('aHomeCountry')}]
 [{assign var="aCountryList" value=$oViewConf->getCountryList()}]
+[{assign var="sActiveThemeId" value=$oViewConf->getActiveTheme()|lower}]
 
 [{$smarty.block.parent}]
 
@@ -18,10 +19,49 @@
             --smartmaps-font-size: 14px;
         }
     }
+    [{if $sActiveThemeId == "azure"}]
+    .sm-autocomplete {
+        border: none;
+        float: left;
+        margin-right: 5px;
+    }
+    .sm-autocomplete input[type="text"] {
+        border: 1px solid #8c8989;
+        border-radius: 4px;
+        background: #fff;
+        padding: 1px 5px;
+        height: 15px;
+        line-height: 14px;
+        font-size: 11px;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .sm-autocomplete > ul {
+        margin-top: 25px;
+    }
+    .sm-autocomplete svg {
+        position: absolute;
+        top: calc(50% - 12px);
+        left: auto;
+        right: 10px;
+    }
+    #awesomplete_list_1 li {
+        width: 100%;
+    }
+    [{elseif $sActiveThemeId == "wave"}]
     .sm-autocomplete {
         display: block;
         border-radius: 4px;
     }
+    .sm-autocomplete [type=text] {
+        height: calc(1.5em + .75rem + 2px);
+        line-height: 1.5;
+    }
+    [{else}]
+    .sm-autocomplete {
+        display: block;
+        border-radius: 4px;
+    }
+    [{/if}]
 </style>
 <script>
     ym.ready({ autocomplete: 5 }, function (modules) {
