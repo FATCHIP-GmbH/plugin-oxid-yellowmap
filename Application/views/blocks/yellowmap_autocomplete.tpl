@@ -64,6 +64,24 @@
     [{/if}]
 </style>
 <script>
+    var oFcId2IsoCountryCodes = {
+        [{foreach from=$aCountryList item=oCountry key=sCountryId}]
+        "[{$sCountryId}]":"[{$oCountry->oxcountry__oxisoalpha2->value}]",
+        [{/foreach}]
+    };
+    var oFcIso2IdCountries = {
+        [{foreach from=$aCountryList item=oCountry key=sCountryId}]
+        "[{$oCountry->oxcountry__oxisoalpha2->value}]":"[{$sCountryId}]",
+        [{/foreach}]
+    };
+    var aFcAllowedIsoCountries = [
+        [{foreach from=$aCountryList item=oCountry key=sCountryId}]
+            [{if $sCountryId|in_array:$aHomeCountry}]
+            "[{$oCountry->oxcountry__oxisoalpha2->value|lower}]",
+            [{/if}]
+        [{/foreach}]
+    ];
+
     ym.ready({ autocomplete: 5 }, function (modules) {
         var oFcFieldMappingInv = {
             street: 'invadr[oxuser__oxstreet]',
@@ -126,39 +144,23 @@
         }
 
         var aIsoCountries = [];
-        if (sSelectedCountryId != '') {
-            var oCountryCodes = {
-                [{foreach from=$aCountryList item=oCountry key=sCountryId}]
-                "[{$sCountryId}]":"[{$oCountry->oxcountry__oxisoalpha2->value}]",
-                [{/foreach}]
-            };
+        if (sSelectedCountryId === '') {
+            return aFcAllowedIsoCountries;
+        }
 
-            if ("undefined" != typeof oCountryCodes[sSelectedCountryId]) {
-                var sSelectedCountryCode = oCountryCodes[sSelectedCountryId];
-                if (sSelectedCountryCode != '') {
-                    aIsoCountries.push(sSelectedCountryCode.toLowerCase());
-                }
+        if ("undefined" != typeof oFcId2IsoCountryCodes[sSelectedCountryId]) {
+            var sSelectedCountryCode = oFcId2IsoCountryCodes[sSelectedCountryId];
+            if (sSelectedCountryCode != '') {
+                aIsoCountries.push(sSelectedCountryCode.toLowerCase());
             }
-        } else {
-            [{foreach from=$aCountryList item=oCountry key=sCountryId}]
-            [{if $sCountryId|in_array:$aHomeCountry}]
-            aIsoCountries.push("[{$oCountry->oxcountry__oxisoalpha2->value|lower}]");
-            [{/if}]
-            [{/foreach}]
         }
 
         return aIsoCountries;
     }
 
     function fcFillAddress (oAddress, oFieldMapping) {
-        var oCountries = {
-            [{foreach from=$aCountryList item=oCountry key=sCountryId}]
-            "[{$oCountry->oxcountry__oxisoalpha2->value}]":"[{$sCountryId}]",
-            [{/foreach}]
-        };
-
-        if ("undefined" != typeof oCountries[oAddress.country]) {
-            fcSelectField(oFieldMapping.country, oCountries[oAddress.country]);     // Country
+        if ("undefined" != typeof oFcIso2IdCountries[oAddress.country]) {
+            fcSelectField(oFieldMapping.country, oFcIso2IdCountries[oAddress.country]);     // Country
         }
         fcUpdateField(oFieldMapping.street, oAddress.street);       // Street
         fcUpdateField(oFieldMapping.houseno, oAddress.houseNo);     // Street nr
