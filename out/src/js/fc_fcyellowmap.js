@@ -143,6 +143,13 @@ function fcFillAddress (oAddress, oFieldMapping) {
     fcUpdateField(oFieldMapping.zip, oAddress.zip);             // Zip
     fcUpdateField(oFieldMapping.city, oAddress.city);           // City
     fcSelectField(oFieldMapping.state, oAddress.state);         // State
+
+    if (oAddress.houseNo == '' || oAddress.houseNo == null) {
+        var oAddrElem = document.getElementsByName(oFieldMapping.houseNo);
+        if (oAddrElem.length > 0) {
+            oAddrElem[0].focus();
+        }
+    }
 }
 
 function fcDetectSubmitButton() {

@@ -64,6 +64,11 @@
         border-radius: 4px;
     }
     [{/if}]
+
+    .fc_yellowmap_validation_button {
+        margin-left: 10px;
+    }
+
 </style>
 <script>
     var iso2Id = {
@@ -275,8 +280,8 @@
         var oFcInvBoxContainer = fcHtmlToElement(
             '<div id="fc_yellowmap_validation_inv" class="alert alert-info" style="display: none">' +
             '<p style="display: inline-block">[{ oxmultilang ident="INVOICE_ADDRESS_SUGGESTION" }]<span id="fc_yellowmap_validation_hint_inv"></span></p>' +
-            '<p class="button" style="display: inline-block"><input type="button" onclick="fcAcceptSuggestion(\'inv\')" value="[{oxmultilang ident='YES'}]" /></p>' +
-            '<p class="button" style="display: inline-block"><input type="button" onclick="fcDeclineSuggestion(\'inv\')" value="[{oxmultilang ident='NO'}]" /></p>' +
+            '<p class="fc_yellowmap_validation_button button" style="display: inline-block"><input type="button" onclick="fcAcceptSuggestion(\'inv\')" value="[{oxmultilang ident='YES'}]" /></p>' +
+            '<p class="fc_yellowmap_validation_button button" style="display: inline-block"><input type="button" onclick="fcDeclineSuggestion(\'inv\')" value="[{oxmultilang ident='NO'}]" /></p>' +
             '</div>'
         );
 
@@ -289,8 +294,8 @@
         var oFcDelBoxContainer = fcHtmlToElement(
             '<div id="fc_yellowmap_validation_del" class="alert alert-info" style="display: none">' +
             '<p style="display: inline-block">[{ oxmultilang ident="DELIVERY_ADDRESS_SUGGESTION" }]<span id="fc_yellowmap_validation_hint_del"></span></p>' +
-            '<p class="button" style="display: inline-block"><input type="button" onclick="fcAcceptSuggestion(\'del\')" value="[{oxmultilang ident='YES'}]" /></p>' +
-            '<p class="button" style="display: inline-block"><input type="button" onclick="fcDeclineSuggestion(\'del\')" value="[{oxmultilang ident='NO'}]" /></p>' +
+            '<p class="fc_yellowmap_validation_button button" style="display: inline-block"><input type="button" onclick="fcAcceptSuggestion(\'del\')" value="[{oxmultilang ident='YES'}]" /></p>' +
+            '<p class="fc_yellowmap_validation_button button" style="display: inline-block"><input type="button" onclick="fcDeclineSuggestion(\'del\')" value="[{oxmultilang ident='NO'}]" /></p>' +
             '</div>'
         );
 
