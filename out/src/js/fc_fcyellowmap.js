@@ -60,6 +60,14 @@ function fcShowValidatedBox(sSection) {
     document.getElementById('fc_yellowmap_validation_' + sSection).style.display = 'none';
 }
 
+function fcHideAllBoxes () {
+    document.getElementById('fc_yellowmap_validation_inv').style.display = 'none';
+    document.getElementById('fc_yellowmap_validation_ok_inv').style.display = 'none';
+    document.getElementById('fc_yellowmap_validation_del').style.display = 'none';
+    document.getElementById('fc_yellowmap_validation_ok_del').style.display = 'none';
+
+}
+
 function fcGetSelectedAddress(oFieldMapping) {
     var oSelectedAddress = {
         "country": "",
@@ -149,4 +157,34 @@ function fcDetectSubmitButton() {
     }
 
     return false;
+}
+
+function fcHtmlToElement(html) {
+    var template = document.createElement('template');
+    html = html.trim();
+    template.innerHTML = html;
+    return template.content.firstChild;
+}
+
+function fcIsCheckNeeded (sSection) {
+    if (sSection === 'del') {
+        var blShowShipAddrBox = document.getElementById('showShipAddress');
+        if (blShowShipAddrBox && blShowShipAddrBox.checked === true) {
+            return false;
+        }
+
+        var oDelAddressForm = document.getElementById('shippingAddressForm');
+        if (oDelAddressForm && oDelAddressForm.style.display == 'none') {
+            return false;
+        }
+    }
+
+    if (sSection === 'inv') {
+        var oInvAddressForm = document.getElementById('addressForm');
+        if (oInvAddressForm && oInvAddressForm.style.display == 'none') {
+            return false;
+        }
+    }
+
+    return true;
 }

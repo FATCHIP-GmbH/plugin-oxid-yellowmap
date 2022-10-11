@@ -100,15 +100,15 @@
             isoCountries: fcFetchIsoCountries(oFieldMapping),
             includeFilters: {
             },
-            dataType: 'json'
-        });
-        oAutoCompleteField.on('selected', function (geojson, address, query) {
-            fcFillAddress(address, oFieldMapping);
-        });
-        oAutoCompleteField.on("ready", function () {
-            var isFirefox = typeof InstallTrigger !== "undefined";
-            if (!isFirefox) {
-                this.element.autocomplete = "disabled";
+            dataType: 'json',
+            onSelected: function (geojson, address, query) {
+                fcFillAddress(address, oFieldMapping);
+            },
+            onReady: function () {
+                var isFirefox = typeof InstallTrigger !== "undefined";
+                if (!isFirefox) {
+                    this.element.autocomplete = "disabled";
+                }
             }
         });
         var oCountrySelector = document.getElementsByName(oFieldMapping.country);
