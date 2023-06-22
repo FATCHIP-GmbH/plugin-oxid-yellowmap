@@ -1,72 +1,25 @@
-# Plugin-oxid-yellowmap
-An Oxid eShop plugin to suggest address in forms
+# YellowMaps Address Autocompletion Module for OXID eShop
+An OXID eShop module to suggest address information in the registration formular.
 
-## Installation via composer
+## Disclaimer
+This module is only intended to use during the OXID Company Offsite workshop for learning purpose. It was updated to OXID eShop 7 by OXID Support, but not sufficiently tested. Features were removed. Do **NOT** use this version by OXID Support!
 
-- In the composer.json file add a new repository
+The original module is found at [FATCHIP GmbH](https://wiki.fatchip.de/public/faqyellowmap).
 
-    - manual
-  ```
-   "repositories": [
-      {
-        "type": "vcs",
-        "url": "https://github.com/FATCHIP-GmbH/plugin-oxid-yellowmap"
-      }
-    ]
-  ```
-    -  command line
-  ```
-  composer config repositories.fatchip-gmbh/plugin-oxid-yellowmap vcs https://github.com/FATCHIP-GmbH/plugin-oxid-yellowmap
-  ```
+## Installation
+Install with Composer:
 
-- execute the following command in the shop base folder (where the composer.json file is located)
 ```
-composer require fatchip-gmbh/plugin-oxid-yellowmap --update-no-dev
-```
-- activate the module after the composer install is finished
-```
-vendor/bin/oe-console oe:module:activate fcyellowmapac
+composer config repositories.oxsfcymaa vcs https://github.com/oxid-support/yellow-maps-autocompletion
+composer require oxid-support/yellow-maps-autocompletion
 ```
 
-## Manual Installation
-- Copy the content into source/modules of the shop installation
-
-- Connect to the webserver with a console, navigate to the shop base folder
-- install oxid module configuration
-```
-vendor/bin/oe-console oe:module:install-configuration source/modules/fc/fcyellowmapac
-```
-
-- apply oxid module configuration
-```
-vendor/bin/oe-console oe:module:apply-configuration
-```
-
-- activate oxid module
-```
-vendor/bin/oe-console oe:module:activate fcyellowmapac
-```
+Then activate the module via command or in administration area.
 
 ## Configuration
-
-### Module Configuration
-Through the module settings you can setup the Smartmaps API Key, mandatory to use the functionality. 
-
-See https://www.smartmaps.net/
+You must register on [SmartMaps](https://www.smartmaps.net/preise/#reg-form) with an email a your shop's domain. Afterwards you get an email with your API key. This key must be set in the module settings.
 
 ## Usage
+When a new user wants to register in your shop, the registration formular shows a search field instead of the usual street input. When the user starts to type their address, YellowMaps provides address suggestions. If a suggestion is selected, the fields street (now search), No., Postal code, City and Country are filled automatically.
 
-- When landing on a form asking for an address (regitration, guest checkout, user profile addresses), the yellowmap module will enhance the **street** field.
-- In this field, you will be able to type in the address hints (street, zip code, house number ...) and the module will suggest existing results based on the entry.
-
-### Note about country restriction
-- By default, the suggestions will be restricted to configured country(ies) in "Master Settings > Settings > Global".
-- If the form's country field is set (selecting a country, or after a first autocompletion), the search is now restricted to this country alone.
-  - If no country is selected (dropdown set back to "-"), the default behaviour applies.
-
-
-## Author
-FATCHIP GmbH | https://www.fatchip.de | support@fatchip.de
-
-## License
-see LICENSE file
+The module only works on the standard registration page - not during checkout!

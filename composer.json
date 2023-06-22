@@ -1,15 +1,14 @@
 {
-  "name": "fatchip-gmbh/plugin-oxid-yellowmap",
+  "name": "oxid-support/yellow-maps-autocompletion",
+  "descriptionm": "Module for learning purpose in workshop. Do NOT use.",
   "type": "oxideshop-module",
   "keywords": [
     "oxid", "yellowmap", "adress", "autocomplete"
   ],
   "homepage": "https://www.fatchip.de",
-  "extra": {
-    "oxideshop": {
-      "target-directory": "fc/fcyellowmapac"
+  "autoload": {
+    "psr-4": {
+        "YellowMaps\\Autocomplete\\": "src/"
     }
-  },
-  "require": {
   }
 }
