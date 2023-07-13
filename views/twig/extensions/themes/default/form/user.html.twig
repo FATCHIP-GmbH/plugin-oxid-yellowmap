@@ -1,0 +1,7 @@
+{% extends 'form/user.html.twig' %}
+
+{% block user_form %}
+    {{ parent() }}
+
+    {{ include('@fcyellowmapac/templates/yellowmap.html.twig') }}
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends 'form/fieldset/user_account.html.twig' %}
+
+{% block user_account_newsletter %}
+    {{ parent() }}
+
+    {{ include('@fcyellowmapac/templates/yellowmap.html.twig') }}
+{% endblock %}

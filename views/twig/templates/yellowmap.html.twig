@@ -1,89 +1,101 @@
-[{if !isset($oConfig)}]
-    [{assign var="oConfig" value=$oViewConf->getConfig()}]
-[{/if}]
-[{assign var="aHomeCountry" value=$oConfig->getConfigParam('aHomeCountry')}]
-[{assign var="aCountryList" value=$oViewConf->getCountryList()}]
-[{assign var="sActiveThemeId" value=$oViewConf->getActiveTheme()|lower}]
-
-[{$smarty.block.parent}]
-
-[{oxscript include=$oViewConf->getModuleUrl('fcyellowmapac', 'out/src/js/fc_fcyellowmap.js')}]
-
-<script src="https://www.yellowmap.de/api_rst/api/loader?libraries=free-5,autocomplete-5&apiKey=[{$oConfig->getConfigParam('sFcYellowmapAcApiKey')}]&channel=OXIDAV"></script>
 <style>
     @supports (--css: variables) {
         :root {
-            --smartmaps-text-color: #555;
-            --smartmaps-input-bg-color: #ffffff;
-            --smartmaps-border: solid 1px #ccc;
-            --smartmaps-border-radius: 4px;
+            --smartmaps-text-color: #000;
+            --smartmaps-input-bg-color: #eff1f2;
+            --smartmaps-border: none;
             --smartmaps-boxshadow: none;
-            --smartmaps-font-size: 14px;
+            --smartmaps-border-radius: 0px;
+            --smartmaps-font-size: inherit;
         }
     }
-    [{if $sActiveThemeId == "azure"}]
-    .sm-autocomplete {
-        border: none;
-        float: left;
-        margin-right: 5px;
-    }
-    .sm-autocomplete input[type="text"] {
-        border: 1px solid #8c8989;
-        border-radius: 4px;
-        background: #fff;
-        padding: 1px 5px;
-        height: 15px;
-        line-height: 14px;
-        font-size: 11px;
-        font-family: Arial, Helvetica, sans-serif;
-    }
-    .sm-autocomplete > ul {
-        margin-top: 25px;
-    }
-    .sm-autocomplete svg {
-        position: absolute;
-        top: calc(50% - 12px);
-        left: auto;
-        right: 10px;
-    }
-    #awesomplete_list_1 li {
-        width: 100%;
-    }
-    [{elseif $sActiveThemeId == "wave"}]
-    .sm-autocomplete {
+    .sm-autocomplete{
         display: block;
-        border-radius: 4px;
     }
-    .sm-autocomplete [type=text] {
-        height: calc(1.5em + .75rem + 2px);
-        line-height: 1.5;
+    .sm-autocomplete svg{
+        left: calc(100% - 20px);
     }
-    [{else}]
-    .sm-autocomplete {
-        display: block;
-        border-radius: 4px;
+    .sm-autocomplete [type=text]{
+        background-color: #eff1f2;
     }
-    [{/if}]
+    .sm-autocomplete + label  {
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        padding:1rem .75rem;
+        overflow:hidden;
+        text-align:start;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        pointer-events:none;
+        border:1px solid transparent;
+        transform-origin:0 0;
+        transition:opacity .1s ease-in-out,transform .1s ease-in-out;
+        opacity:.65;
+        transform:scale(.85) translateY(-.5rem) translateX(.15rem)
+     }
+
+    .sm-autocomplete .form-control{
+        height:calc(3.5rem + 2px);
+        line-height:1.25
+    }
+    .sm-autocomplete .form-control{
+        padding:1rem .75rem
+    }
+    .sm-autocomplete .form-control::placeholder{
+        color:transparent
+    }
+    .sm-autocomplete .form-control:focus,
+    .sm-autocomplete .form-control:not(:placeholder-shown){
+        padding-top:1.625rem;
+        padding-bottom:.625rem
+    }
+    .sm-autocomplete .form-control:-webkit-autofill{
+        padding-top:1.625rem;
+        padding-bottom:.625rem
+    }
+
+    /*
+        FIXME New autocomplete DOM structure disconnects field from label
+        The CSS pseudo class :has() could help but not supported in Firefox at the moment
+    */
+    .sm-autocomplete .form-control:focus~label,
+    .sm-autocomplete .form-control:not(:placeholder-shown)~label{
+        opacity:.65;
+        transform:scale(.85) translateY(-.5rem) translateX(.15rem)
+    }
+    .sm-autocomplete .form-control:-webkit-autofill~label{
+        opacity:.65;
+        transform:scale(.85) translateY(-.5rem) translateX(.15rem)
+    }
 
     .fc_yellowmap_validation_button {
         margin-left: 10px;
     }
 
 </style>
+
+{% set aCountryList = oViewConf.getCountryList() %}
+{% set sActiveThemeId = oViewConf.getActiveTheme()|lower %}
+
+{{ script({ include: oViewConf.getModuleUrl('fcyellowmapac', 'js/fc_fcyellowmap.js'), priority: 1, dynamic: __oxid_include_dynamic }) }}
+
+<script src="{{ oViewConf.fcGetYMFullLibraryUrl() }}"></script>
+
 <script>
-    var iso2Id = {
-    };
-    var id2Iso = {
-    };
+    var iso2Id = {};
+    var id2Iso = {};
     var allowedIso = [];
 
-    [{foreach from=$aCountryList item=oCountry key=sCountryId}]
-    id2Iso["[{$sCountryId}]"] = "[{$oCountry->oxcountry__oxisoalpha2->value}]";
-    iso2Id["[{$oCountry->oxcountry__oxisoalpha2->value}]"] = "[{$sCountryId}]";
-    [{if $sCountryId|in_array:$aHomeCountry}]
-    allowedIso.push("[{$oCountry->oxcountry__oxisoalpha2->value|lower}]");
-    [{/if}]
-    [{/foreach}]
+    {% for sCountryId, oCountry in aCountryList %}
+        id2Iso["{{ sCountryId }}"] = "{{ oCountry.oxcountry__oxisoalpha2.value }}";
+        iso2Id["{{ oCountry.oxcountry__oxisoalpha2.value }}"] = "{{ sCountryId }}";
+        {% if sCountryId in aHomeCountry %}
+            allowedIso.push("{{ oCountry.oxcountry__oxisoalpha2.value|lower }}");
+        {% endif %}
+    {% endfor %}
 
     document.addEventListener("DOMContentLoaded", function(event) {
         initCountriesLists(id2Iso, iso2Id, allowedIso);
@@ -234,74 +246,33 @@
         aFcAddressesList[sSection].validated = fcGetAddressString(fcGetSelectedAddress(oFieldMapping));
     }
 
-    function fcAppendMessageBoxes () {
-        var oFcTargetElement = document.getElementsByClassName('checkoutCollumns');
-        var sFcContext = null;
-        if (oFcTargetElement.length > 0) {
-            oFcTargetElement = oFcTargetElement[oFcTargetElement.length - 1];
-            sFcContext = 'checkout';
-        } else{
-            oFcTargetElement = document.getElementsByClassName('addressCollumns');
-            if (oFcTargetElement.length > 0) {
-                oFcTargetElement = oFcTargetElement[oFcTargetElement.length - 1];
-                sFcContext = 'user';
-            } else {
-                oFcTargetElement = document.getElementById('accUserSaveTop');
-                if (oFcTargetElement) {
-                    sFcContext = 'register';
-                }
-            }
-        }
-
-        if (!sFcContext) {
-            console.log('Error : impossible to initialize message boxes.');
-            return false;
-        }
-
-        var oFcBoxContainer = fcGenerateMessageBoxElements();
-
-        switch (sFcContext) {
-            case 'checkout':
-                oFcTargetElement.after(oFcBoxContainer);
-                break;
-            case 'user':
-                oFcTargetElement.after(oFcBoxContainer);
-                break;
-            case 'register':
-                oFcTargetElement.parentElement.parentElement.before(oFcBoxContainer);
-                break;
-        }
-
-        return true;
-    }
-
     function fcGenerateMessageBoxElements() {
         var oFcBoxContainer = document.createElement("div");
         var oFcInvBoxContainer = fcHtmlToElement(
             '<div id="fc_yellowmap_validation_inv" class="alert alert-info" style="display: none">' +
-            '<p style="display: inline-block">[{ oxmultilang ident="INVOICE_ADDRESS_SUGGESTION" }]<span id="fc_yellowmap_validation_hint_inv"></span></p>' +
-            '<p class="fc_yellowmap_validation_button button" style="display: inline-block"><input type="button" onclick="fcAcceptSuggestion(\'inv\')" value="[{oxmultilang ident='YES'}]" /></p>' +
-            '<p class="fc_yellowmap_validation_button button" style="display: inline-block"><input type="button" onclick="fcDeclineSuggestion(\'inv\')" value="[{oxmultilang ident='NO'}]" /></p>' +
+            '<p style="display: inline-block">{{ translate({ ident: "INVOICE_ADDRESS_SUGGESTION" }) }}<span id="fc_yellowmap_validation_hint_inv"></span></p>' +
+            '<p class="fc_yellowmap_validation_button button" style="display: inline-block"><input type="button" onclick="fcAcceptSuggestion(\'inv\')" value="{{ translate({ ident: 'YES' }) }}" /></p>' +
+            '<p class="fc_yellowmap_validation_button button" style="display: inline-block"><input type="button" onclick="fcDeclineSuggestion(\'inv\')" value="{{ translate({ ident: 'NO' }) }}" /></p>' +
             '</div>'
         );
 
         var oFcInvOkBoxContainer = fcHtmlToElement(
             '<div id="fc_yellowmap_validation_ok_inv" class="alert alert-info" style="display: none">' +
-            '<p>[{ oxmultilang ident="INVOICE_ADDRESS_CONFIRMED" }]</p>' +
+            '<p>{{ translate({ ident: "INVOICE_ADDRESS_CONFIRMED" }) }}</p>' +
             '</div>'
         );
 
         var oFcDelBoxContainer = fcHtmlToElement(
             '<div id="fc_yellowmap_validation_del" class="alert alert-info" style="display: none">' +
-            '<p style="display: inline-block">[{ oxmultilang ident="DELIVERY_ADDRESS_SUGGESTION" }]<span id="fc_yellowmap_validation_hint_del"></span></p>' +
-            '<p class="fc_yellowmap_validation_button button" style="display: inline-block"><input type="button" onclick="fcAcceptSuggestion(\'del\')" value="[{oxmultilang ident='YES'}]" /></p>' +
-            '<p class="fc_yellowmap_validation_button button" style="display: inline-block"><input type="button" onclick="fcDeclineSuggestion(\'del\')" value="[{oxmultilang ident='NO'}]" /></p>' +
+            '<p style="display: inline-block">{{ translate({ ident: "DELIVERY_ADDRESS_SUGGESTION" }) }}<span id="fc_yellowmap_validation_hint_del"></span></p>' +
+            '<p class="fc_yellowmap_validation_button button" style="display: inline-block"><input type="button" onclick="fcAcceptSuggestion(\'del\')" value="{{ translate({ ident: 'YES' }) }}" /></p>' +
+            '<p class="fc_yellowmap_validation_button button" style="display: inline-block"><input type="button" onclick="fcDeclineSuggestion(\'del\')" value="{{ translate({ ident: 'NO' }) }}" /></p>' +
             '</div>'
         );
 
         var oFcDelOkBoxContainer = fcHtmlToElement(
             '<div id="fc_yellowmap_validation_ok_del" class="alert alert-info" style="display: none">' +
-            '<p>[{ oxmultilang ident="DELIVERY_ADDRESS_CONFIRMED" }]</p>' +
+            '<p>{{ translate({ ident: "DELIVERY_ADDRESS_CONFIRMED" }) }}</p>' +
             '</div>'
         );
 

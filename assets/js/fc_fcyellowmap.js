@@ -192,6 +192,22 @@ function fcIsCheckNeeded (sSection) {
             return false;
         }
     }
+    return true;
+}
+
+function fcAppendMessageBoxes () {
+    var oFcTargetElement = document.getElementById('addressForm');
+
+    if ( !oFcTargetElement) {
+        oFcTargetElement = document.getElementById('registerAdrressForm');
+    }
+
+    if ( !oFcTargetElement) {
+        return false;
+    }
+
+    var oFcBoxContainer = fcGenerateMessageBoxElements();
+    oFcTargetElement.after(oFcBoxContainer);
 
     return true;
 }

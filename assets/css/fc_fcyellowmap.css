@@ -1,0 +1,37 @@
+/*
+ * @author FATCHIP GmbH
+ * @copyright (C) 2023, FATCHIP GmbH
+ *
+ * This Software is the property of FATCHIP GmbH
+ * and is protected by copyright law - it is NOT Freeware.
+ *
+ * Any unauthorized use of this software without a valid license
+ * is a violation of the license agreement and will be
+ * prosecuted by civil and criminal law.
+ */
+@supports (--css: variables) {
+    :root {
+        --smartmaps-text-color: #555;
+        --smartmaps-input-bg-color: #ffffff;
+        --smartmaps-border: solid 1px #ccc;
+        --smartmaps-border-radius: 4px;
+        --smartmaps-boxshadow: none;
+        --smartmaps-font-size: 14px;
+    }
+}
+.sm-autocomplete {
+    display: block;
+    border:none;
+}
+.sm-autocomplete svg{
+    left: calc(100% - 20px);
+}
+.sm-autocomplete [type=text] {
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+    background-color: #eff1f2;
+}
+
+.fc_yellowmap_validation_button {
+    margin-left: 10px;
+}
