@@ -49,69 +49,6 @@ function fcFetchIsoCountries(oFieldMapping) {
     return aIsoCountries;
 }
 
-function fcShowSuggestionBox(sSuggestedAddressString, sSection) {
-    document.getElementById('fc_yellowmap_validation_hint_' + sSection).innerText = sSuggestedAddressString;
-    document.getElementById('fc_yellowmap_validation_ok_' + sSection).style.display = 'none';
-    document.getElementById('fc_yellowmap_validation_' + sSection).style.display = 'block';
-}
-
-function fcShowValidatedBox(sSection) {
-    document.getElementById('fc_yellowmap_validation_ok_' + sSection).style.display = 'block';
-    document.getElementById('fc_yellowmap_validation_' + sSection).style.display = 'none';
-}
-
-function fcHideAllBoxes () {
-    document.getElementById('fc_yellowmap_validation_inv').style.display = 'none';
-    document.getElementById('fc_yellowmap_validation_ok_inv').style.display = 'none';
-    document.getElementById('fc_yellowmap_validation_del').style.display = 'none';
-    document.getElementById('fc_yellowmap_validation_ok_del').style.display = 'none';
-
-}
-
-function fcGetSelectedAddress(oFieldMapping) {
-    var oSelectedAddress = {
-        "country": "",
-        "district": "",
-        "zip": "",
-        "city": "",
-        "cityAddOn": "",
-        "cityPart": "",
-        "street": "",
-        "houseNo": "",
-        "singleSlot": ""
-    };
-    Object.keys(oFieldMapping).forEach(function(index) {
-        var oAddrElem = document.getElementsByName(oFieldMapping[index]);
-        if (oAddrElem.length > 0) {
-            oAddrElem = oAddrElem[0];
-
-            if (oSelectedAddress.hasOwnProperty(index)) {
-                if (index === 'country' && "undefined" != typeof oFcId2IsoCountryCodes[oAddrElem.value]) {
-                    oSelectedAddress['country'] = oFcId2IsoCountryCodes[oAddrElem.value];
-                } else {
-                    oSelectedAddress[index] = oAddrElem.value;
-                }
-            }
-        }
-    });
-
-    return oSelectedAddress;
-}
-
-function fcGetAddressString (oAddress) {
-    var sAddressString =
-        (oAddress.country != null ? oAddress.country + "," : '') +
-        (oAddress.zip != null ? oAddress.zip + "," : '') +
-        (oAddress.city != null ? oAddress.city + "," : '') +
-        (oAddress.street != null ? oAddress.street + "," : '') +
-        (oAddress.houseNo != null ? oAddress.houseNo + "," : '');
-    while (sAddressString.charAt(sAddressString.length - 1) === ',') {
-        sAddressString = sAddressString.slice(0, -1);
-    }
-
-    return sAddressString;
-}
-
 function fcUpdateField(sFieldName, sValue) {
     var oAddrElem = document.getElementsByName(sFieldName);
     if (oAddrElem.length > 0) {
@@ -150,48 +87,4 @@ function fcFillAddress (oAddress, oFieldMapping) {
             oAddrElem[0].focus();
         }
     }
-}
-
-function fcDetectSubmitButton() {
-    var oSubmit = document.getElementById('userNextStepBottom');
-    if (oSubmit) {
-        return oSubmit;
-    }
-
-    oSubmit = document.getElementById('accUserSaveTop');
-    if (oSubmit) {
-        return oSubmit;
-    }
-
-    return false;
-}
-
-function fcHtmlToElement(html) {
-    var template = document.createElement('template');
-    html = html.trim();
-    template.innerHTML = html;
-    return template.content.firstChild;
-}
-
-function fcIsCheckNeeded (sSection) {
-    if (sSection === 'del') {
-        var blShowShipAddrBox = document.getElementById('showShipAddress');
-        if (blShowShipAddrBox && blShowShipAddrBox.checked === true) {
-            return false;
-        }
-
-        var oDelAddressForm = document.getElementById('shippingAddressForm');
-        if (oDelAddressForm && oDelAddressForm.style.display == 'none') {
-            return false;
-        }
-    }
-
-    if (sSection === 'inv') {
-        var oInvAddressForm = document.getElementById('addressForm');
-        if (oInvAddressForm && oInvAddressForm.style.display == 'none') {
-            return false;
-        }
-    }
-
-    return true;
 }
