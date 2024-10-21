@@ -104,12 +104,13 @@
             dataType: 'json',
             onSelected: function (geojson, address, query) {
                 fcFillAddress(address, oFieldMapping);
-            },
-            onReady: function () {
-                var isFirefox = typeof InstallTrigger !== "undefined";
-                if (!isFirefox) {
-                    this.element.autocomplete = "disabled";
-                }
+            }
+        });
+
+        oAutoCompleteField.on("ready", function () {
+            var isFirefox = typeof InstallTrigger !== "undefined";
+            if (!isFirefox) {
+                this.element.autocomplete = "disabled";
             }
         });
 
